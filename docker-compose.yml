@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: my-mysql-db
+
+    environment:
+      MYSQL_ROOT_PASSWORD: Karthi@123
+      MYSQL_DATABASE: studentdb
+
+    ports:
+      - "4406:3306"
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pKarthi@123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: kartheektheprince/my-spring-docker-compose-app:latest
+    container_name: my-docker-compose-app
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    ports:
+      - "8088:8089"
